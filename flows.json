@@ -1,0 +1,1430 @@
+[
+    {
+        "id": "39eeb69bcf530dbc",
+        "type": "tab",
+        "label": "babyagi",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "afef75855fd20bf6",
+        "type": "subflow",
+        "name": "OpenAI",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 240,
+                "y": 220,
+                "wires": [
+                    {
+                        "id": "3fb61895359ddeea"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 840,
+                "y": 220,
+                "wires": [
+                    {
+                        "id": "1821864112e4ee9c",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
+        "id": "799b2714689c52e7",
+        "type": "group",
+        "z": "39eeb69bcf530dbc",
+        "name": "Global",
+        "style": {
+            "stroke": "#92d04f",
+            "label": true
+        },
+        "nodes": [
+            "77180feaff4d5130",
+            "8d63d1f942513785",
+            "e40e28f78177c084",
+            "152abbb1a32b6e9a",
+            "a71380698545bfba",
+            "cccf876a7687d60e"
+        ],
+        "x": 34,
+        "y": 79,
+        "w": 732,
+        "h": 122
+    },
+    {
+        "id": "17965c4b9f2a83c3",
+        "type": "group",
+        "z": "39eeb69bcf530dbc",
+        "name": "Credential",
+        "style": {
+            "stroke": "#0070c0",
+            "label": true
+        },
+        "nodes": [
+            "876ca2a327bbf742",
+            "4fbea48f5fcac951",
+            "1597a5bfc8b290dd",
+            "cab0a4cf864ec59a",
+            "682fd7e93e8fc114",
+            "10eac66d955f5767",
+            "1105a126875d3f23",
+            "7b7a917b5834de34",
+            "2ae4172c5dd7168e",
+            "50d817cb7369edd3",
+            "305cfab9683c882d",
+            "1659225c58a2b8ab",
+            "e8932bcdc24b40b4",
+            "e849e62835a29646"
+        ],
+        "x": 834,
+        "y": 39,
+        "w": 1092,
+        "h": 222
+    },
+    {
+        "id": "3fb61895359ddeea",
+        "type": "function",
+        "z": "afef75855fd20bf6",
+        "name": "to ChatGPT",
+        "func": "const { OPENAI_API_KEY } = global.get('process_env');\n\nmsg.url = 'https://api.openai.com/v1/chat/completions';\nmsg.headers = {\n    'Content-Type': 'application/json',\n    'Authorization': `Bearer ${OPENAI_API_KEY}`\n};\n\nmsg.payload = {\n    \"model\": \"gpt-3.5-turbo\",\n    // \"prompt\": msg.payload,\n    \"messages\": [\n        { \"role\": \"user\", \"content\": msg.payload }\n    ],\n    \"temperature\": 0.7,\n    \"max_tokens\": 2000,\n    \"top_p\": 1,\n    \"frequency_penalty\": 0,\n    \"presence_penalty\": 0\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 220,
+        "wires": [
+            [
+                "25a8a0c3674a5573"
+            ]
+        ]
+    },
+    {
+        "id": "25a8a0c3674a5573",
+        "type": "http request",
+        "z": "afef75855fd20bf6",
+        "name": "ChatGPT",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 540,
+        "y": 220,
+        "wires": [
+            [
+                "1821864112e4ee9c"
+            ]
+        ]
+    },
+    {
+        "id": "1821864112e4ee9c",
+        "type": "function",
+        "z": "afef75855fd20bf6",
+        "name": "return data",
+        "func": "msg.payload = msg.payload.choices[0].message.content.trim();\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 710,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3a06857287698982",
+        "type": "debug",
+        "z": "afef75855fd20bf6",
+        "name": "OpenAI res",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "7d621d155c03f0c4",
+        "type": "inject",
+        "z": "39eeb69bcf530dbc",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 480,
+        "wires": [
+            [
+                "e05aa65b7305641f"
+            ]
+        ]
+    },
+    {
+        "id": "0d79cdf8e9a7ecfb",
+        "type": "function",
+        "z": "39eeb69bcf530dbc",
+        "name": "initial_task",
+        "func": "const { add_task, get_tasks_storage } = global.get(\"helpers\");\nconst isStartChat = global.get(\"startChart\");\n\nconst initial_tasks_storage = get_tasks_storage();\n\nif (isStartChat) {\n    if (initial_tasks_storage.length === 0) {\n        add_task(msg.initial_task);\n\n        const tasks_storage = get_tasks_storage();\n        const getFirstIncompleteTask = tasks_storage.shift();\n\n        global.set(\"tasks_storage\", []);\n\n        msg.task = getFirstIncompleteTask;\n        node.warn(`NEXT TASK: ${msg.task['task_name']}`);\n    } else {\n        const tasks_storage = get_tasks_storage();\n        node.warn(\"TASK LIST\");\n        node.warn(tasks_storage);\n\n        const getFirstIncompleteTask = tasks_storage.shift(); // Pull the first task\n\n        global.set(\"tasks_storage\", tasks_storage);\n\n        msg.task = getFirstIncompleteTask;\n\n        node.warn(`NEXT TASK: ${msg.task['task_name']}`);\n    }\n\n    return [msg, null]\n} else {\n    return [null, msg]\n}\n\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 520,
+        "wires": [
+            [
+                "90c123c46fe18f8a"
+            ],
+            [
+                "48b7bfc24cbaacc2"
+            ]
+        ]
+    },
+    {
+        "id": "e05aa65b7305641f",
+        "type": "function",
+        "z": "39eeb69bcf530dbc",
+        "name": "function 417",
+        "func": "const { Configuration, OpenAIApi } = openai;\nconst { PineconeClient } = pineconeBD;\nconst { CreateIndexRequest } = pineconeDBPFetch;\n\nconst { OPENAI_API_KEY, PINECONE_API_KEY, PINECONE_ENVIRONMENT, TABLE_NAME} = global.get('process_env');\n\n// ============ GLOBAL ============\nglobal.set(\"INITIAL_TASK\", \"Develop a task list\");\nglobal.set(\"OBJECTIVE\", msg.payload.objective);\n\nglobal.set(\"tasks_storage\", []);\nglobal.set(\"results_storage\", []);\nglobal.set(\"taskId\", 0);\nglobal.set(\"tasksForApp\", []);\nglobal.set(\"startChart\", true);\n// ============================\n\n\nconst configuration = new Configuration({\n    apiKey: OPENAI_API_KEY,\n});\nconst openAI = new OpenAIApi(configuration);\n\nconst pinecone = new PineconeClient();\nawait pinecone.init({\n    apiKey: PINECONE_API_KEY,\n    environment: PINECONE_ENVIRONMENT,\n});\n\nconst indexList = await pinecone.listIndexes();\nlet index = pinecone.Index(TABLE_NAME);\n\nlet embeddingList = new Map();\nglobal.set(\"embeddingList\", embeddingList);\n\nmsg.main = { indexList, openAI, pinecone, index};\n\n// ============ FN ============\nfunction next_task_id() {\n    const prevId = global.get(\"taskId\");\n    const taskId = prevId + 1;\n    global.set(\"taskId\", taskId);\n\n    return taskId;\n}\n\nfunction add_task(task) {\n    const tasks_storage = global.get(\"tasks_storage\");\n    tasks_storage.push(task)\n\n    global.set(\"tasks_storage\", tasks_storage);\n}\n\nfunction get_tasks_storage() {\n    return global.get(\"tasks_storage\")\n}\n\n/**\n* @param {string} text\n*/\nasync function getADAEmbedding(text) {\n    const embeddingList = global.get(\"embeddingList\");\n\n    if (embeddingList.has(text)) {\n        return embeddingList.get(text);\n    }\n\n    const embedding = (\n        await openAI.createEmbedding({\n            input: [text],\n            model: \"text-embedding-ada-002\",\n        })\n    ).data?.data[0].embedding;\n    \n    embeddingList.set(text, embedding);\n\n    return embedding;\n}\n\nglobal.set(\"helpers\", {\n    next_task_id,\n    add_task,\n    get_tasks_storage,\n    getADAEmbedding\n});\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "pineconeBD",
+                "module": "@pinecone-database/pinecone"
+            },
+            {
+                "var": "pineconeDBPFetch",
+                "module": "@pinecone-database/pinecone/dist/pinecone-generated-ts-fetch"
+            },
+            {
+                "var": "openai",
+                "module": "openai"
+            }
+        ],
+        "x": 265,
+        "y": 520,
+        "wires": [
+            [
+                "7d05252feb3c7433"
+            ]
+        ],
+        "icon": "node-red/cog.svg",
+        "l": false
+    },
+    {
+        "id": "6b5b2975afb79b3c",
+        "type": "debug",
+        "z": "39eeb69bcf530dbc",
+        "name": "execution_agent start",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "90c123c46fe18f8a",
+        "type": "function",
+        "z": "39eeb69bcf530dbc",
+        "name": "execution_agent start",
+        "func": "const { getADAEmbedding } = global.get(\"helpers\");\nconst { pinecone, openAI } = msg.main;\n\n/**\n* @param {string} objective\n* @param {number} topK\n*/\nasync function contextAgent( objective, topK) {\n    const queryEmbedding = await getADAEmbedding(objective);\n\n    try {\n        const results = await msg.main.index.query({\n            queryRequest: {\n                vector: queryEmbedding,\n                includeMetadata: true,\n                topK,\n            },\n        });\n\n        const sortedResults = results.matches?.sort((a, b) => (b?.score ?? 0) - (a?.score ?? 0)) ?? [];\n        return sortedResults.map((item) => (item.metadata)?.task ?? \"\");\n    } catch (error) {\n        node.warn(error);\n    };\n}\n\nconst contextData = await contextAgent(global.get(\"OBJECTIVE\"), 5);\n\nconst prompt = `You are an AI who performs one task based on the following objective: ${global.get(\"OBJECTIVE\")}.\n    Take into account these previously completed tasks: ${contextData}.\n    Your task: ${msg.task[\"task_name\"]}\n    Response:\n`;\n\nmsg.payload = prompt;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 500,
+        "wires": [
+            [
+                "6b5b2975afb79b3c",
+                "e1f55e91ce8ae108"
+            ]
+        ]
+    },
+    {
+        "id": "519eb422b228904d",
+        "type": "function",
+        "z": "39eeb69bcf530dbc",
+        "name": "execution_agent end | task_creation_agent start",
+        "func": "const { get_tasks_storage, getADAEmbedding } = global.get(\"helpers\");\nconst result = msg.payload;\n\nnode.warn(`TASK RESULT: ${result}`);\n\nmsg.currTaskId = msg.task.task_id;\nmsg.enriched_result = { \"data\": result };\n\nconst vector = msg.enriched_result.data;\nconst result_id = `result_${msg.task.task_id}`;\n\nconst embeddingResult = await getADAEmbedding(vector);\n\n      await msg.main.index.upsert({\n        upsertRequest: {\n          vectors: [\n            {\n              id: msg.task.task_id.toString(),\n              values: embeddingResult,\n              metadata: { task: msg.task.task_name, result },\n            },\n          ],\n        },\n      });\n      \nconst task_description = msg.task.task_name;\nconst objective = global.get(\"OBJECTIVE\");\nconst taskList = get_tasks_storage();\n\nglobal.set(\"currentTaskId\", msg.task.id);\n\nconst prompt = `\n        You are an task creation AI that uses the result of an execution agent to create new tasks with the following objective: ${objective}, \n        The last completed task has the result: ${result}. \n        This result was based on this task description: ${task_description}. \n        These are incomplete tasks: ${taskList.map(task => `${task.task_id}: ${task.task_name}`).join(', ')}. \n        Based on the result, create new tasks to be completed by the AI system that do not overlap with incomplete tasks. \n        Return the tasks as an array.`;\n        \nmsg.payload = prompt;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1140,
+        "y": 520,
+        "wires": [
+            [
+                "4ad2cf259ef50b4c",
+                "a21df0a8ddf788ca"
+            ]
+        ]
+    },
+    {
+        "id": "4ad2cf259ef50b4c",
+        "type": "debug",
+        "z": "39eeb69bcf530dbc",
+        "name": "task_creation_agent start",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1470,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "9b60874ccaac2eef",
+        "type": "function",
+        "z": "39eeb69bcf530dbc",
+        "name": "task_creation_agent end | prioritization_agent start",
+        "func": "const { add_task, get_tasks_storage, next_task_id } = global.get(\"helpers\");\n\nconst response = msg.payload;\n\nconst newTasks = response.trim().includes(\"\\n\") ? response.trim().split(\"\\n\") : [response.trim()];\nconst updatedTasks = newTasks.map(taskName => ({ task_name: taskName, task_id: next_task_id() }));\n\nglobal.set(\"tasks_storage\", updatedTasks);\n\nconst taskList = global.get(\"tasks_storage\");\n\nconst taskNames = taskList.map((task) => task.task_name);\nconst nextTaskId = msg.currTaskId + 1;\n\nconst prompt = `\n    You are an task prioritization AI tasked with cleaning the formatting of and reprioritizing the following tasks: ${taskNames}. \n    Consider the ultimate objective of your team:${global.get(\"OBJECTIVE\")}. Do not remove any tasks. Return the result as a numbered list, like:\n    #. First task\n    #. Second task\n    Start the task list with number ${nextTaskId}.`;\n\nmsg.payload = prompt;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1710,
+        "y": 520,
+        "wires": [
+            [
+                "60896ec14973ae16",
+                "38d05cd43fd969fc"
+            ]
+        ]
+    },
+    {
+        "id": "60896ec14973ae16",
+        "type": "debug",
+        "z": "39eeb69bcf530dbc",
+        "name": "prioritization_agent start",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2030,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "7d05252feb3c7433",
+        "type": "function",
+        "z": "39eeb69bcf530dbc",
+        "name": "function 419",
+        "func": "const { next_task_id } = global.get(\"helpers\");\n\nmsg.initial_task = {\n    \"task_id\": next_task_id(),\n    \"task_name\": global.get(\"INITIAL_TASK\")\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 325,
+        "y": 520,
+        "wires": [
+            [
+                "0d79cdf8e9a7ecfb"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "e1f55e91ce8ae108",
+        "type": "subflow:afef75855fd20bf6",
+        "z": "39eeb69bcf530dbc",
+        "name": "",
+        "x": 860,
+        "y": 520,
+        "wires": [
+            [
+                "519eb422b228904d"
+            ]
+        ]
+    },
+    {
+        "id": "a21df0a8ddf788ca",
+        "type": "subflow:afef75855fd20bf6",
+        "z": "39eeb69bcf530dbc",
+        "name": "",
+        "x": 1420,
+        "y": 520,
+        "wires": [
+            [
+                "9b60874ccaac2eef"
+            ]
+        ]
+    },
+    {
+        "id": "54b00cbf08bfb8ac",
+        "type": "debug",
+        "z": "39eeb69bcf530dbc",
+        "name": "prioritization_agent end",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2470,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "10eb58a467f3c422",
+        "type": "function",
+        "z": "39eeb69bcf530dbc",
+        "name": "prioritization_agent end",
+        "func": "const { add_task } = global.get(\"helpers\");\n\nconst response = msg.payload;\n\nmsg.newTasks = response.trim().includes(\"\\n\") ? response.trim().split(\"\\n\") : [response.trim()];\n\nglobal.set(\"tasks_storage\", []);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2210,
+        "y": 520,
+        "wires": [
+            [
+                "54b00cbf08bfb8ac",
+                "70e7cf95d684d3fa"
+            ]
+        ]
+    },
+    {
+        "id": "38d05cd43fd969fc",
+        "type": "subflow:afef75855fd20bf6",
+        "z": "39eeb69bcf530dbc",
+        "name": "",
+        "x": 1990,
+        "y": 520,
+        "wires": [
+            [
+                "10eb58a467f3c422"
+            ]
+        ]
+    },
+    {
+        "id": "c32cfaea1282ca28",
+        "type": "function",
+        "z": "39eeb69bcf530dbc",
+        "name": "while res",
+        "func": "const isStartChat = global.get(\"startChart\");\n\nif (isStartChat) {\n    msg.payload = global.get(\"tasks_storage\").length;\n} else {\n    msg.payload = 0;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2755,
+        "y": 520,
+        "wires": [
+            [
+                "465078f3fa8b1ce6"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "72514ae23d5fd209",
+        "type": "delay",
+        "z": "39eeb69bcf530dbc",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "70",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1760,
+        "y": 380,
+        "wires": [
+            [
+                "0d79cdf8e9a7ecfb"
+            ]
+        ]
+    },
+    {
+        "id": "70e7cf95d684d3fa",
+        "type": "delay",
+        "z": "39eeb69bcf530dbc",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 2420,
+        "y": 520,
+        "wires": [
+            [
+                "ff73c5b355a3608a"
+            ]
+        ]
+    },
+    {
+        "id": "ff73c5b355a3608a",
+        "type": "function",
+        "z": "39eeb69bcf530dbc",
+        "name": "add task to store",
+        "func": "const { add_task } = global.get(\"helpers\");\n\nlet id = msg.currTaskId;\nmsg.newTasks.forEach((newTask) => {\n    const newTaskParts = newTask.trim().split(/\\.(?=\\s)/)\n    if (newTaskParts.length == 2) {\n        newTaskParts[0].trim();\n        id += 1;\n        const newTaskName = newTaskParts[1].trim();\n\n        add_task({\n            task_id: id,\n            task_name: newTaskName\n        })\n    }\n});\n\nconst task = {\n    task_id: msg.task.task_id,\n    task_name: msg.task.task_name,\n    task_result: msg.enriched_result.data,\n    next_task: global.get(\"tasks_storage\")[0].task_name,\n}\nconst tasksForApp = global.get(\"tasksForApp\");\nconst updateTasksForApp = [...tasksForApp, task];\n\nglobal.set(\"tasksForApp\", updateTasksForApp);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2610,
+        "y": 520,
+        "wires": [
+            [
+                "c32cfaea1282ca28"
+            ]
+        ]
+    },
+    {
+        "id": "465078f3fa8b1ce6",
+        "type": "while-loop",
+        "z": "39eeb69bcf530dbc",
+        "name": "",
+        "condi": "msg.payload !== 0",
+        "limit": false,
+        "limitTime": 10000,
+        "time": "wl465078f3fa8b1ce6",
+        "timeType": "msg",
+        "x": 2815,
+        "y": 520,
+        "wires": [
+            [],
+            [
+                "72514ae23d5fd209"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "94cd4fcf12698c30",
+        "type": "http in",
+        "z": "39eeb69bcf530dbc",
+        "name": "",
+        "url": "/getTasksFromPinecone",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 160,
+        "y": 880,
+        "wires": [
+            [
+                "1783620bc93eb736"
+            ]
+        ]
+    },
+    {
+        "id": "e72e329f0b140a33",
+        "type": "http response",
+        "z": "39eeb69bcf530dbc",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 510,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "1783620bc93eb736",
+        "type": "function",
+        "z": "39eeb69bcf530dbc",
+        "name": "get",
+        "func": "const { PineconeClient } = pineconeBD;\nconst { OPENAI_API_KEY, PINECONE_API_KEY, PINECONE_ENVIRONMENT, TABLE_NAME } = global.get('process_env');\n\nconst queryData = { \n    \"vector\": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], \n}\n\nconst pinecone = new PineconeClient();\nawait pinecone.init({\n    apiKey: PINECONE_API_KEY,\n    environment: PINECONE_ENVIRONMENT,\n});\n\ntry {\n    const index = pinecone.Index(TABLE_NAME);\n\n    const vectorCount = await index.describeIndexStats({\n        describeIndexStatsRequest: {},\n    });\n\n    if (vectorCount.totalVectorCount > 0) {\n        const queryResponse = await index.query({\n            queryRequest: {\n                vector: queryData.vector,\n                namespace: \"\",\n                topK: vectorCount.totalVectorCount,\n                includeMetadata: true,\n            },\n        });\n\n        const data = queryResponse.matches.map((el) => {\n            return {\n                ...el,\n                id: +el.id\n            }\n        }).sort((a, b) => a.id - b.id)\n\n        msg.payload = data.map((el) => el.metadata);\n    } else {\n        msg.payload = [];\n    }\n} catch (error) {\n    node.warn(error);\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "pineconeBD",
+                "module": "@pinecone-database/pinecone"
+            },
+            {
+                "var": "axios",
+                "module": "axios"
+            }
+        ],
+        "x": 370,
+        "y": 880,
+        "wires": [
+            [
+                "11b9dfc6591c3f9f",
+                "e72e329f0b140a33"
+            ]
+        ]
+    },
+    {
+        "id": "11b9dfc6591c3f9f",
+        "type": "debug",
+        "z": "39eeb69bcf530dbc",
+        "name": "tasks from Pinecone",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "bdd54bee87df6f04",
+        "type": "inject",
+        "z": "39eeb69bcf530dbc",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 220,
+        "y": 840,
+        "wires": [
+            [
+                "1783620bc93eb736"
+            ]
+        ]
+    },
+    {
+        "id": "b59a60f74e7ba284",
+        "type": "http in",
+        "z": "39eeb69bcf530dbc",
+        "name": "",
+        "url": "/getTasks",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 760,
+        "wires": [
+            [
+                "7b6b2eddf093d8e4"
+            ]
+        ]
+    },
+    {
+        "id": "7b6b2eddf093d8e4",
+        "type": "function",
+        "z": "39eeb69bcf530dbc",
+        "name": "return tasks",
+        "func": "const tasks = global.get(\"tasksForApp\");\n\nif (tasks) {\n    msg.payload = tasks;\n} else {\n    msg.payload = [];\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 760,
+        "wires": [
+            [
+                "8aaa2f32548c750f",
+                "4e93dd8ae8c5b6c4"
+            ]
+        ]
+    },
+    {
+        "id": "8aaa2f32548c750f",
+        "type": "http response",
+        "z": "39eeb69bcf530dbc",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 470,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "2999c263053b37d2",
+        "type": "inject",
+        "z": "39eeb69bcf530dbc",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 720,
+        "wires": [
+            [
+                "7b6b2eddf093d8e4"
+            ]
+        ]
+    },
+    {
+        "id": "4e93dd8ae8c5b6c4",
+        "type": "debug",
+        "z": "39eeb69bcf530dbc",
+        "name": "getTasks RES",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "48b7bfc24cbaacc2",
+        "type": "http response",
+        "z": "39eeb69bcf530dbc",
+        "name": "Stop Chat",
+        "statusCode": "",
+        "headers": {},
+        "x": 630,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "163f99e95aa7f6b3",
+        "type": "http in",
+        "z": "39eeb69bcf530dbc",
+        "name": "",
+        "url": "/stopAgent",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 640,
+        "wires": [
+            [
+                "8f6c10799005f60a"
+            ]
+        ]
+    },
+    {
+        "id": "b0ccd23d4e74be7c",
+        "type": "http response",
+        "z": "39eeb69bcf530dbc",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 430,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "8f6c10799005f60a",
+        "type": "function",
+        "z": "39eeb69bcf530dbc",
+        "name": "stop",
+        "func": "const { PineconeClient } = pineconeBD;\nconst { PINECONE_API_KEY, PINECONE_ENVIRONMENT, TABLE_NAME } = global.get('process_env');\n\nconst pinecone = new PineconeClient();\nawait pinecone.init({\n    apiKey: PINECONE_API_KEY,\n    environment: PINECONE_ENVIRONMENT,\n});\n\ntry {\n    await pinecone.deleteIndex({\n        indexName: TABLE_NAME,\n    });\n} catch (error) {\n    node.warn(error);\n};\n\nglobal.set(\"startChart\", false);\nglobal.set(\"tasksForApp\", []);\nglobal.set(\"embeddingList\", []);\nglobal.set(\"tasks_storage\", []);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "pineconeBD",
+                "module": "@pinecone-database/pinecone"
+            }
+        ],
+        "x": 290,
+        "y": 640,
+        "wires": [
+            [
+                "b0ccd23d4e74be7c",
+                "d637a25f008ed962"
+            ]
+        ],
+        "icon": "font-awesome/fa-stop-circle"
+    },
+    {
+        "id": "5323217b0fed0919",
+        "type": "http in",
+        "z": "39eeb69bcf530dbc",
+        "name": "",
+        "url": "/startAgent",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 520,
+        "wires": [
+            [
+                "e05aa65b7305641f"
+            ]
+        ]
+    },
+    {
+        "id": "77180feaff4d5130",
+        "type": "inject",
+        "z": "39eeb69bcf530dbc",
+        "g": "799b2714689c52e7",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 160,
+        "wires": [
+            [
+                "152abbb1a32b6e9a"
+            ]
+        ]
+    },
+    {
+        "id": "8d63d1f942513785",
+        "type": "function",
+        "z": "39eeb69bcf530dbc",
+        "g": "799b2714689c52e7",
+        "name": "ENV",
+        "func": "const data = msg.payload\n\nlet process_env = {\n    OPENAI_API_KEY: data.openai_api,\n    PINECONE_API_KEY: data.pinecone_api,\n    PINECONE_ENVIRONMENT: data.pinecone_enviroment,\n    TABLE_NAME: data.table_name,\n}\n\nglobal.set(\"process_env\", process_env)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e40e28f78177c084",
+        "type": "complete",
+        "z": "39eeb69bcf530dbc",
+        "g": "799b2714689c52e7",
+        "name": "",
+        "scope": [
+            "4fbea48f5fcac951"
+        ],
+        "uncaught": false,
+        "x": 130,
+        "y": 120,
+        "wires": [
+            [
+                "152abbb1a32b6e9a"
+            ]
+        ]
+    },
+    {
+        "id": "152abbb1a32b6e9a",
+        "type": "function",
+        "z": "39eeb69bcf530dbc",
+        "g": "799b2714689c52e7",
+        "name": "getEnvs",
+        "func": "msg.filename = '/data/credentials.json'\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 140,
+        "wires": [
+            [
+                "a71380698545bfba"
+            ]
+        ]
+    },
+    {
+        "id": "a71380698545bfba",
+        "type": "file in",
+        "z": "39eeb69bcf530dbc",
+        "g": "799b2714689c52e7",
+        "name": "",
+        "filename": "filename",
+        "filenameType": "msg",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 480,
+        "y": 140,
+        "wires": [
+            [
+                "cccf876a7687d60e"
+            ]
+        ]
+    },
+    {
+        "id": "cccf876a7687d60e",
+        "type": "json",
+        "z": "39eeb69bcf530dbc",
+        "g": "799b2714689c52e7",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 585,
+        "y": 140,
+        "wires": [
+            [
+                "8d63d1f942513785"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "876ca2a327bbf742",
+        "type": "http in",
+        "z": "39eeb69bcf530dbc",
+        "g": "17965c4b9f2a83c3",
+        "name": "",
+        "url": "/saveCredentials",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 960,
+        "y": 80,
+        "wires": [
+            [
+                "1597a5bfc8b290dd"
+            ]
+        ]
+    },
+    {
+        "id": "4fbea48f5fcac951",
+        "type": "http response",
+        "z": "39eeb69bcf530dbc",
+        "g": "17965c4b9f2a83c3",
+        "name": "saveCredentials",
+        "statusCode": "",
+        "headers": {},
+        "x": 1820,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "1597a5bfc8b290dd",
+        "type": "function",
+        "z": "39eeb69bcf530dbc",
+        "g": "17965c4b9f2a83c3",
+        "name": "set filename",
+        "func": "msg.filename = '/data/credentials.json'\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1170,
+        "y": 80,
+        "wires": [
+            [
+                "10eac66d955f5767"
+            ]
+        ]
+    },
+    {
+        "id": "cab0a4cf864ec59a",
+        "type": "file",
+        "z": "39eeb69bcf530dbc",
+        "g": "17965c4b9f2a83c3",
+        "name": "",
+        "filename": "filename",
+        "filenameType": "msg",
+        "appendNewline": true,
+        "createDir": true,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 1480,
+        "y": 80,
+        "wires": [
+            [
+                "682fd7e93e8fc114"
+            ]
+        ]
+    },
+    {
+        "id": "682fd7e93e8fc114",
+        "type": "function",
+        "z": "39eeb69bcf530dbc",
+        "g": "17965c4b9f2a83c3",
+        "name": "return res",
+        "func": "msg.payload={\n    success: true,\n    payload: \"Success!\"\n}\nmsg.statusCode = 200\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1640,
+        "y": 80,
+        "wires": [
+            [
+                "4fbea48f5fcac951"
+            ]
+        ]
+    },
+    {
+        "id": "10eac66d955f5767",
+        "type": "json",
+        "z": "39eeb69bcf530dbc",
+        "g": "17965c4b9f2a83c3",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 1330,
+        "y": 80,
+        "wires": [
+            [
+                "cab0a4cf864ec59a"
+            ]
+        ]
+    },
+    {
+        "id": "1105a126875d3f23",
+        "type": "file in",
+        "z": "39eeb69bcf530dbc",
+        "g": "17965c4b9f2a83c3",
+        "name": "",
+        "filename": "filename",
+        "filenameType": "msg",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 1340,
+        "y": 180,
+        "wires": [
+            [
+                "7b7a917b5834de34"
+            ]
+        ]
+    },
+    {
+        "id": "7b7a917b5834de34",
+        "type": "json",
+        "z": "39eeb69bcf530dbc",
+        "g": "17965c4b9f2a83c3",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 1490,
+        "y": 180,
+        "wires": [
+            [
+                "305cfab9683c882d"
+            ]
+        ]
+    },
+    {
+        "id": "2ae4172c5dd7168e",
+        "type": "http in",
+        "z": "39eeb69bcf530dbc",
+        "g": "17965c4b9f2a83c3",
+        "name": "",
+        "url": "/getCredentials",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 950,
+        "y": 180,
+        "wires": [
+            [
+                "1659225c58a2b8ab"
+            ]
+        ]
+    },
+    {
+        "id": "50d817cb7369edd3",
+        "type": "http response",
+        "z": "39eeb69bcf530dbc",
+        "g": "17965c4b9f2a83c3",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1790,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "305cfab9683c882d",
+        "type": "function",
+        "z": "39eeb69bcf530dbc",
+        "g": "17965c4b9f2a83c3",
+        "name": "return res",
+        "func": "msg.statusCode = 200\nglobal.set('isCredentialsSent', true)\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1640,
+        "y": 180,
+        "wires": [
+            [
+                "50d817cb7369edd3"
+            ]
+        ]
+    },
+    {
+        "id": "1659225c58a2b8ab",
+        "type": "function",
+        "z": "39eeb69bcf530dbc",
+        "g": "17965c4b9f2a83c3",
+        "name": "set filename",
+        "func": "msg.filename = '/data/credentials.json'\nglobal.set('isCredentialsSent', false)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1170,
+        "y": 180,
+        "wires": [
+            [
+                "1105a126875d3f23",
+                "e849e62835a29646"
+            ]
+        ]
+    },
+    {
+        "id": "e8932bcdc24b40b4",
+        "type": "function",
+        "z": "39eeb69bcf530dbc",
+        "g": "17965c4b9f2a83c3",
+        "name": "default data",
+        "func": "if (global.get('isCredentialsSent') === false){\n    msg.payload = {\n        \"pinecone_api\": '',\n        \"pinecone_enviroment\": '',\n        \"table_name\": '',\n        \"openai_api\": ''\n    }\n    global.set('isCredentialsSent', true)\n    return msg;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1470,
+        "y": 220,
+        "wires": [
+            [
+                "305cfab9683c882d"
+            ]
+        ]
+    },
+    {
+        "id": "e849e62835a29646",
+        "type": "delay",
+        "z": "39eeb69bcf530dbc",
+        "g": "17965c4b9f2a83c3",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "3",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1295,
+        "y": 220,
+        "wires": [
+            [
+                "e8932bcdc24b40b4"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "d637a25f008ed962",
+        "type": "debug",
+        "z": "39eeb69bcf530dbc",
+        "name": "stopAgent RES",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 460,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "3efc6f9ffb92183f",
+        "type": "http in",
+        "z": "39eeb69bcf530dbc",
+        "name": "",
+        "url": "/getIndexStatus",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 130,
+        "y": 960,
+        "wires": [
+            [
+                "580b93ee0f5939a3"
+            ]
+        ]
+    },
+    {
+        "id": "580b93ee0f5939a3",
+        "type": "function",
+        "z": "39eeb69bcf530dbc",
+        "name": "get",
+        "func": "const { PineconeClient } = pineconeBD;\nconst { PINECONE_API_KEY, PINECONE_ENVIRONMENT, TABLE_NAME } = global.get('process_env');\n\nconst pinecone = new PineconeClient();\nawait pinecone.init({\n    apiKey: PINECONE_API_KEY,\n    environment: PINECONE_ENVIRONMENT,\n});\n\ntry {\n\n    const list = await pinecone.listIndexes();\n\n    if (list.length > 0) {\n        const indexStatus = await pinecone.describeIndex({ indexName: TABLE_NAME });\n\n        msg.qwe = indexStatus;\n\n        if (indexStatus.status.ready) {\n            msg.payload = {\n                text: \"Ready\",\n                img: \"https://cdn-icons-png.flaticon.com/512/5709/5709755.png\",\n                ready: true\n            }\n        } else {\n            msg.payload = {\n                text: \"Initializing\",\n                img: \"https://i.stack.imgur.com/kOnzy.gif\",\n                ready: false\n            }\n        }\n    } else {\n        msg.payload = {\n            text: \"Removed\",\n            img: \"\",\n            ready: false\n        }\n    }\n\n} catch (error) {\n    node.warn(error);\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "pineconeBD",
+                "module": "@pinecone-database/pinecone"
+            },
+            {
+                "var": "axios",
+                "module": "axios"
+            }
+        ],
+        "x": 310,
+        "y": 960,
+        "wires": [
+            [
+                "c55e14eaa45398f7",
+                "8c566c50eee99f35"
+            ]
+        ]
+    },
+    {
+        "id": "c55e14eaa45398f7",
+        "type": "debug",
+        "z": "39eeb69bcf530dbc",
+        "name": "get index status RES",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "37269329dc4884ca",
+        "type": "inject",
+        "z": "39eeb69bcf530dbc",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 1000,
+        "wires": [
+            [
+                "580b93ee0f5939a3"
+            ]
+        ]
+    },
+    {
+        "id": "8c566c50eee99f35",
+        "type": "http response",
+        "z": "39eeb69bcf530dbc",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 450,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "c7493af2ac25cabe",
+        "type": "function",
+        "z": "39eeb69bcf530dbc",
+        "name": "create Index",
+        "func": "const { PineconeClient } = pineconeBD;\n\nconst { PINECONE_API_KEY, PINECONE_ENVIRONMENT, TABLE_NAME } = global.get('process_env');\nconst pinecone = new PineconeClient();\nawait pinecone.init({\n    apiKey: PINECONE_API_KEY,\n    environment: PINECONE_ENVIRONMENT,\n});\n\ntry {\n    const list = await pinecone.listIndexes();\n    \n    if (list.length === 0) {\n        await pinecone.createIndex({\n            createRequest: {\n                name: TABLE_NAME,\n                dimension: 1536,\n                metric: \"cosine\",\n                pod_type: \"s1\"\n            },\n        });\n    }\n} catch (error) {\n    node.warn(error);\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "pineconeBD",
+                "module": "@pinecone-database/pinecone"
+            }
+        ],
+        "x": 390,
+        "y": 420,
+        "wires": [
+            [
+                "439a92e2dd91685c",
+                "cf262d31e4f754f5"
+            ]
+        ]
+    },
+    {
+        "id": "cdfdb0587e2c21e8",
+        "type": "http in",
+        "z": "39eeb69bcf530dbc",
+        "name": "",
+        "url": "/pinecone/createIndex",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 160,
+        "y": 420,
+        "wires": [
+            [
+                "c7493af2ac25cabe"
+            ]
+        ]
+    },
+    {
+        "id": "439a92e2dd91685c",
+        "type": "http response",
+        "z": "39eeb69bcf530dbc",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 550,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "cf262d31e4f754f5",
+        "type": "debug",
+        "z": "39eeb69bcf530dbc",
+        "name": "create Index RES",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 590,
+        "y": 380,
+        "wires": []
+    }
+]
