@@ -2,7 +2,9 @@
     "name": "task-manager-ai",
     "description": "A Node-RED Project",
     "version": "0.0.1",
-    "dependencies": {},
+    "dependencies": {
+        "node-red-contrib-loop-processing": "0.5.1"
+    },
     "node-red": {
         "settings": {
             "flowFile": "flows.json",
