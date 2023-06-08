@@ -13,12 +13,14 @@ Task manager
   <a href="https://github.com/UBOS-tech">GitHub</a>
   </h3>
 
+<div align="center">
+  
+  [![Use template](https://ubos.tech/wp-content/uploads/2023/06/download-logo.png)](https://platform.ubos.tech/?templateId=64538a883023c6001004f3af)
+  [![Use template](https://ubos.tech/wp-content/uploads/2023/06/Group-19.png)](https://youtu.be/rkc5tKsmDlo)
+  
+</div>
 
 This template is an example of an AI-powered task management system. The system uses OpenAI and Pinecone APIs to create, prioritize, and execute tasks. The main idea behind this system is that it creates tasks based on the result of previous tasks and a predefined objective. The script then uses OpenAI's natural language processing (NLP) capabilities to create new tasks based on the objective, and Pinecone to store and retrieve task results for context. This is a pared-down version of the original [Task-Driven Autonomous Agent](https://twitter.com/yoheinakajima/status/1640934493489070080?s=20) (Mar 28, 2023).
-
-Check this video demo of the tool in action: 
-- [Demo with comments](https://youtu.be/rkc5tKsmDlo)
-- [Demo without comments](https://youtu.be/KxwP61z3OME)
 
 ## How it works
 The script works by running an infinite loop that does the following steps:
@@ -41,4 +43,3 @@ Creating a configuration
 Chat demo
 
 [Demo](https://user-images.githubusercontent.com/41735477/235855134-fca592e8-ae8f-427d-9ca8-6267278a4c90.mov)
-
